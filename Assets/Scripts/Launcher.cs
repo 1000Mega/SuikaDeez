@@ -38,10 +38,8 @@ public class Launcher : MonoBehaviour
         if (Input.GetButtonDown("Jump")) 
         {
             Instantiate(BallPrefab, LaunchOffset.position, transform.rotation);
-        
+            BallPrefab.ballColour = Random.Range(1, 3);
         }
-
-        
     }
 
     void FixedUpdate()

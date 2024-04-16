@@ -6,33 +6,55 @@ public class BallHandler : MonoBehaviour
 {
     public float ballSpeed = 2f;
     public float gameBounds = 10f;
+
+    public int ballColour = 0;
+
     Vector3 ballDir = Vector3.zero;
     Vector3 lastPos = Vector3.zero;
+
+    bool ballStuck = false;
+
+    SpriteRenderer sprite;
 
     // Start is called before the first frame update
     void Start()
     {
         ballDir = transform.up;
+
+        //Set ball colour. Maybe switch case?
+        sprite = GetComponentInChildren<SpriteRenderer>();
+        switch (ballColour) 
+        {
+            case 1:
+                sprite.color = Color.red;
+            break;
+
+            default:
+                sprite.color = Color.blue;
+            break;
+        }
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        lastPos = transform.position;
-
-        //Destroy on exiting boundary
-        if(Mathf.Abs(transform.position.x) > gameBounds || Mathf.Abs(transform.position.y) > gameBounds) 
-        {
-            Destroy(gameObject);
-        }
-            
-        transform.position += ballDir * Time.deltaTime * ballSpeed;
+        
         //print(transform.up);
     }
 
     void FixedUpdate()
     {
-        
+        //Destroy on exiting boundary
+        if (Mathf.Abs(transform.position.x) > gameBounds || Mathf.Abs(transform.position.y) > gameBounds) {
+            Destroy(gameObject);
+        }
+
+        lastPos = transform.position;
+
+        if (!ballStuck) {
+            transform.position += ballDir * Time.fixedDeltaTime * ballSpeed;
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -44,8 +66,27 @@ public class BallHandler : MonoBehaviour
         {
             print(transform.position.x);
             print(lastPos.x);
-            transform.position = lastPos;
+            //transform.position = lastPos;
             ballDir = new Vector3(-ballDir.x, ballDir.y, ballDir.z);
         }       
+        //Ceiling collision
+        if (collision.gameObject.layer == 7) 
+        {
+            //transform.position = lastPos;
+            ballSpeed = 0;
+            ballStuck = true;
+        }
+        //Ball collision 
+        if (collision.gameObject.layer == 8) {
+            int collideBall = collision.gameObject.GetComponent<BallHandler>().ballColour;
+            //Colours do not match
+            if (collideBall != ballColour) {
+                ballSpeed = 0;
+                ballStuck = true;
+            }
+            else {
+                Debug.Log(ballColour);
+            }
+        }
     }    
 }
