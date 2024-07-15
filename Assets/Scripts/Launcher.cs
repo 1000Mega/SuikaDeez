@@ -10,6 +10,8 @@ public class Launcher : MonoBehaviour
     [SerializeField, Range(0f, 10f)]
     float aimSpeed = 1f;
 
+    int nextBall = 0;
+
     public BallHandler BallPrefab;
     public Transform LaunchOffset;
 
@@ -23,6 +25,7 @@ public class Launcher : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         rb.SetRotation(aimAngle);
+        ChooseNextBall();
     }
 
     // Update is called once per frame
@@ -32,18 +35,26 @@ public class Launcher : MonoBehaviour
         playerInput.x = Input.GetAxis("Horizontal");
         playerInput.y = Input.GetAxis("Vertical"); //Unneeded? For aim anyway
 
-        aimAngle = aimAngle + (-playerInput.x * aimSpeed); //Negative x input to rotate as expected.
+        aimAngle += (-playerInput.x * aimSpeed); //Negative x input to rotate as expected.
         rb.SetRotation(aimAngle);
 
-        if (Input.GetButtonDown("Jump")) 
-        {
+        if (Input.GetButtonDown("Jump")) {
             Instantiate(BallPrefab, LaunchOffset.position, transform.rotation);
-            BallPrefab.ballColour = Random.Range(1, 3);
+            BallPrefab.ballColour = ChooseNextBall();
         }
+
     }
 
     void FixedUpdate()
     {
-        
+
+    }
+
+    //In case we want some more logic rather than randomness
+    int ChooseNextBall()
+    {
+        nextBall = Random.Range(1, 3);
+
+        return nextBall;
     }
 }

@@ -23,17 +23,8 @@ public class BallHandler : MonoBehaviour
 
         //Set ball colour. Maybe switch case?
         sprite = GetComponentInChildren<SpriteRenderer>();
-        switch (ballColour) 
-        {
-            case 1:
-                sprite.color = Color.red;
-            break;
 
-            default:
-                sprite.color = Color.blue;
-            break;
-        }
-        
+        setColour();
     }
 
     // Update is called once per frame
@@ -85,8 +76,29 @@ public class BallHandler : MonoBehaviour
                 ballStuck = true;
             }
             else {
-                Debug.Log(ballColour);
+                Destroy(collision.gameObject);
+                ballColour++;
+                setColour();
+                
+                //Debug.Log(ballColour);
             }
         }
-    }    
+    } 
+    
+    void setColour()
+    {
+        switch (ballColour) {
+            case 1:
+                sprite.color = Color.red;
+                break;
+
+            case 2:
+                sprite.color = Color.green;
+                break;
+
+            default:
+                sprite.color = Color.blue;
+                break;
+        }
+    }
 }
