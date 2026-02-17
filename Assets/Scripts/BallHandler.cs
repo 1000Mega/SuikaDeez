@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BallHandler : MonoBehaviour
 {
-    public float ballSpeed = 2f;
+    public float ballSpeed = 0f;
     public float gameBounds = 10f;
 
     public int ballColour = 0;
@@ -42,6 +42,7 @@ public class BallHandler : MonoBehaviour
         }
 
         lastPos = transform.position;
+        setColour();
 
         if (!ballStuck) {
             transform.position += ballDir * Time.fixedDeltaTime * ballSpeed;
