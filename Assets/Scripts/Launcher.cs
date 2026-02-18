@@ -48,12 +48,8 @@ public class Launcher : MonoBehaviour
         rb.SetRotation(aimAngle);
 
         if (Input.GetButtonDown("Jump")) {
-            BallPrefab.ballSpeed = 10.0f;
-            Instantiate(BallPrefab, LaunchOffset.position, transform.rotation);
-            BallPrefab.ballColour = ChooseNextBall();
-            //Next.ballColour = ChooseNextBall();
+            CreateBall();
         }
-
     }
 
     void FixedUpdate()
@@ -61,10 +57,18 @@ public class Launcher : MonoBehaviour
 
     }
 
+    void CreateBall()
+    {
+        BallPrefab.ballSpeed = 10.0f;
+        Instantiate(BallPrefab, LaunchOffset.position, transform.rotation);
+        BallPrefab.ballColour = ChooseNextBall();
+        //Next.ballColour = ChooseNextBall();
+    }
+
     //In case we want some more logic later rather than randomness
     int ChooseNextBall()
     {
-        nextBall = Random.Range(1, 4); //min inclusive, max exclusive
+        nextBall = Random.Range(1, 3); //min inclusive, max exclusive
         Next.ballColour = nextBall; 
         return nextBall;
     }

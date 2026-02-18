@@ -11,6 +11,7 @@ public class BallHandler : MonoBehaviour
 
     Vector3 ballDir = Vector3.zero;
     Vector3 lastPos = Vector3.zero;
+    Vector3 sizeUp = Vector3.zero;
 
     bool ballStuck = false;
 
@@ -20,17 +21,19 @@ public class BallHandler : MonoBehaviour
     void Start()
     {
         ballDir = transform.up;
+        sizeUp = new Vector3(0.5f, 0.5f, 0.5f);
 
         //Set ball colour. Maybe switch case?
         sprite = GetComponentInChildren<SpriteRenderer>();
 
-        setColour();
+        //Size = ball number * size increase
+        transform.localScale += (sizeUp * (ballColour - 1));
+        SetNextColour();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
         //print(transform.up);
     }
 
@@ -42,7 +45,7 @@ public class BallHandler : MonoBehaviour
         }
 
         lastPos = transform.position;
-        setColour();
+        SetNextColour();
 
         if (!ballStuck) {
             transform.position += ballDir * Time.fixedDeltaTime * ballSpeed;
@@ -51,6 +54,7 @@ public class BallHandler : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        //TODO: Prevent "big blues" from multi-collisions?
         //we should check for walls (bounces), merges, sticks?
 
         //Wall Layer Mask (6)
@@ -79,14 +83,15 @@ public class BallHandler : MonoBehaviour
             else {
                 Destroy(collision.gameObject);
                 ballColour++;
-                setColour();
+                transform.localScale += sizeUp;
+                SetNextColour();
                 
                 //Debug.Log(ballColour);
             }
         }
     } 
     
-    void setColour()
+    void SetNextColour()
     {
         switch (ballColour) {
             case 1:
